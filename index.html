@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sorry Celine ❤️</title>
+  <style>
+    :root { --accent: #ff6ec7; }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif}
+
+    /* GIF background (floating hearts) */
+    body{
+      background: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTNyNjJmbXA4MXZhc3N6MjRzemtteTZrZHE3aXY2cmZ0d21pdXJqayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26ufcYAkp8e66vanu/giphy.gif') center/cover no-repeat fixed;
+      display:flex;align-items:center;justify-content:center;color:#fff;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    /* dark overlay so text is readable */
+    body::before{ content:""; position:fixed; inset:0; background:rgba(0,0,0,0.38); pointer-events:none; }
+
+    .card{
+      width: min(520px, 94vw);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.92));
+      color: #111;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+      position: relative;
+      text-align:center;
+    }
+
+    .meme-container{ position:relative; max-width:420px; margin: 0 auto; }
+    .meme-img{ width:100%; display:block; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.25); }
+
+    .meme-text{
+      position:absolute; left:50%; transform:translateX(-50%);
+      width:92%; text-align:center; font-family: Impact, 'Arial Black', sans-serif;
+      color:#fff; text-transform:uppercase; letter-spacing:1px;
+      -webkit-text-stroke:3px #000; /* outline */
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+      padding:4px; font-size:clamp(16px,3.8vw,28px);
+    }
+    .meme-text.top{ top:10px; }
+    .meme-text.bottom{ bottom:10px; }
+
+    .title{ margin:14px 0 8px; font-size:20px; font-weight:700; }
+    .lines{ height:64px; display:flex; align-items:center; justify-content:center; font-size:15px; color:#444; }
+
+    .ilove{ margin-top:10px; font-size:22px; color:#e63946; font-weight:800; animation:beat 1.2s infinite; }
+    @keyframes beat{ 0%,100%{transform:scale(1)}50%{transform:scale(1.14)} }
+
+    .controls{ margin-top:12px; display:flex; gap:10px; justify-content:center; }
+    .btn{ background:transparent; border:2px solid rgba(0,0,0,0.06); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700; }
+    .small{ font-size:12px; color:#666; margin-top:8px }
+
+    /* overlay prompt visible until first click */
+    .tap-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+    .tap-btn{ background:rgba(0,0,0,0.6); color:#fff; border:0; padding:10px 14px; border-radius:999px; font-weight:800; cursor:pointer; backdrop-filter: blur(4px); }
+
+    @media(max-width:420px){ .card{ padding:14px } .meme-text{ font-size:18px } .ilove{ font-size:18px } }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="meme-container">
+      <img class="meme-img" src="https://i.pinimg.com/564x/14/08/99/1408994c079141538a689fd37b4032dd.jpg" alt="sorry emoji" />
+      <div class="meme-text top" id="topCaption">IM SO SORRY FOR THAT MISTAKE</div>
+      <div class="meme-text bottom" id="bottomCaption">SORRY CELINE 💔</div>
+    </div>
+
+    <div class="title">Celine, I'm really sorry.</div>
+    <div class="lines" id="lines">I messed up — I feel really bad.</div>
+    <div class="ilove">I LOVE U ❤️</div>
+
+    <div class="controls">
+      <button class="btn" id="editBtn">Edit captions</button>
+      <button class="btn" id="playBtn">Play music</button>
+    </div>
+    <div class="small">(Click/tap anywhere on the page to start the music)</div>
+
+    <div class="tap-overlay" id="tapOverlay">
+      <button class="tap-btn" id="tapToPlay">Tap to play music 🎵</button>
+    </div>
+  </div>
+
+  <!-- Background music: replace song.mp3 with your file or URL -->
+  <audio id="bgm" loop preload="auto">
+    <source src="song.mp3" type="audio/mpeg">
+    <!-- fallback text -->
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const bgm = document.getElementById('bgm');
+      const overlay = document.getElementById('tapOverlay');
+      const tapBtn = document.getElementById('tapToPlay');
+      const playBtn = document.getElementById('playBtn');
+
+      function unlockAudio(){
+        // try play (may be handled by browser's policy) — ignore promise errors
+        bgm.play().catch(()=>{});
+        overlay.style.display = 'none';
+      }
+
+      // Start music on first user gesture (click/tap) anywhere
+      document.addEventListener('click', unlockAudio, { once: true, capture: true });
+      tapBtn.addEventListener('click', unlockAudio);
+      playBtn.addEventListener('click', ()=> bgm.play().catch(()=>{}));
+
+      // Edit captions quickly
+      document.getElementById('editBtn').addEventListener('click', ()=>{
+        const top = prompt('Top caption:', document.getElementById('topCaption').textContent) || '';
+        const bottom = prompt('Bottom caption:', document.getElementById('bottomCaption').textContent) || '';
+        document.getElementById('topCaption').textContent = top;
+        document.getElementById('bottomCaption').textContent = bottom;
+      });
+
+      // Rotate apology lines
+      const lines = [
+        "I messed up, and I'm owning it.",
+        "You matter to me more than the mistake I made.",
+        "If you're willing, I'd love to talk and make it right.",
+        "Please forgive me, Celine 🙏"
+      ];
+      let idx = 0;
+      const linesDiv = document.getElementById('lines');
+      linesDiv.textContent = lines[0];
+      setInterval(()=>{ idx = (idx + 1) % lines.length; linesDiv.textContent = lines[idx]; }, 2400);
+
+      // prevent image drag
+      document.querySelectorAll('img').forEach(i=>i.addEventListener('dragstart', e=>e.preventDefault()));
+    });
+  </script>
+</body>
+</html>
